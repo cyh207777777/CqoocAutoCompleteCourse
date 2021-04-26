@@ -6,7 +6,7 @@ import json
 
 ################### Config #############################
 
-cookie_xsid = ''
+cookie_xsid = '16DD64A835DE8B9D'
 
 ########################################################
 
@@ -31,7 +31,7 @@ class AutoCompletPapers():
             self.name = input("名字获取失败！请输入你的名字（真实名字）: ")
 
     def get(self, url, headers=None):
-        # 防止请求异常抛出，异常自动重新请求
+        # 防止请求异常抛出，异常自动重新请�?
         while True:
             try:
                 return self.Session.get(url, headers=headers)
@@ -48,7 +48,7 @@ class AutoCompletPapers():
     def getAnswers(self, paperId):
         # 获取答案
         req_url = f'http://www.cqooc.com/test/api/paper/get?id={paperId}&ts={getTs()}'
-        # TODO 替换Referer中的id值
+        # TODO 替换Referer中的id�?
         response = self.get(req_url, headers={
             'Referer': 'http://www.cqooc.com/learn/mooc/testing/do?tid=42663&id=334566831&sid=360456&cid=149658&mid=12158213',
         })
@@ -111,7 +111,7 @@ class AutoCompletPapers():
 
     def sendAnswers(self, mode=None):
         """
-        :param mode: due 已过期题目获取答案提交  非due  从另一个用户获取答案提交
+        :param mode: due 已过期题目获取答案提�? 非due  从另一个用户获取答案提�?
         :return:
         """
         info = self.get('http://www.cqooc.com/user/session?xsid=' + cookie_xsid).json()
@@ -123,7 +123,7 @@ class AutoCompletPapers():
         for i in papersList.json()['data']:
             papersInfo[str(i.get('id'))] = i.get('title')
 
-        print("\n[{}] 共 {} 题".format('过期题目作答' if mode == 'due' else '拷贝答案作答', len(papersInfo)))
+        print("\n[{}] �?{} �?.format('过期题目作答' if mode == 'due' else '拷贝答案作答', len(papersInfo)))
         for index, id in enumerate(papersInfo):
 
             answers = self.getAnswers(id) if mode == 'due' else self.getAnswersFromUser(id)
@@ -133,19 +133,19 @@ class AutoCompletPapers():
                 time.sleep(1)
                 continue
             elif answers == None:
-                print(f"{len(papersInfo)}/{index+1} [{papersInfo[id]}] {'无测试题目，跳过！' if mode == 'due' else '未获取到答案，跳过！'}")
+                print(f"{len(papersInfo)}/{index+1} [{papersInfo[id]}] {'无测试题目，跳过�? if mode == 'due' else '未获取到答案，跳过！'}")
                 time.sleep(1)
                 continue
             elif answers == -2:
                 return
 
-            # 检查是否已经作答
+            # 检查是否已经作�?
             isAnswer = self.get(f'http://www.cqooc.com/json/test/result/search?testID={id}&ts={getTs()}', headers={
                 'Referer': f'http://www.cqooc.com/learn/mooc/testing/do?tid={id}&id={self.courseId}&sid=488839&cid=197038&mid=335078130'
             }).json()
 
             if isAnswer['data'] != []:
-                print("{}/{} [{}] 已作答，跳过！".format(len(papersInfo), index + 1, papersInfo[id]))
+                print("{}/{} [{}] 已作答，跳过�?.format(len(papersInfo), index + 1, papersInfo[id]))
                 time.sleep(1)
                 continue
 
@@ -225,7 +225,7 @@ class AutoCompleteOnlineCourse:
                 self.title = courseData[int(id) - 1]['title']
                 break
             except:
-                print("输入有误，请重新输入！")
+                print("输入有误，请重新输入�?)
                 continue
         self.parentId = courseData[int(id) - 1]['parentId']
         self.courseId = courseData[int(id) - 1]['courseId']
@@ -245,10 +245,10 @@ class AutoCompleteOnlineCourse:
                 autoCompletPapers = AutoCompletPapers(self.Session, self.courseId)
                 autoCompletPapers.sendAnswers()
             else:
-                print("输入有误，请重新输入！")
+                print("输入有误，请重新输入�?)
 
     def getCourseDes(self):
-        # 课程章节名
+        # 课程章节�?
         self.Session.headers['Referer'] = f'http://www.cqooc.com/my/learn/mooc/structure?id={self.courseId}'
         courseDes = {}
         res = self.get(f'http://www.cqooc.com/json/chapters?limit=200&start=1&sortby=selfId&status=1&courseId={self.courseId}&select=id,title,level,selfId,parentId&ts={getTs()}')
@@ -275,7 +275,7 @@ class AutoCompleteOnlineCourse:
 
     def getCompleteCourse(self) -> list:
         """
-        获取已完成小节列表
+        获取已完成小节列�?
         :return:
         """
         self.Session.headers['Referer'] = 'http://www.cqooc.com/learn/mooc/progress?id=' + self.courseId
